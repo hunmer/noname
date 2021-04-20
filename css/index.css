@@ -1,0 +1,72 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 0.6fr 1.4fr 1.2fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "note note editor1 editor1"
+    "note note editor1 editor1"
+    "note note editor2 editor2"
+    "note note editor2 editor2";
+}
+
+.note { grid-area: note; }
+
+.editor1 { grid-area: editor1; }
+
+.editor2 { grid-area: editor2; }
+
+
+#editor {
+	height: 200px;
+	font-size: 15px;
+}
+
+#code {
+	height: 200px;
+	font-size: 15px;
+}
+
+@font-face { 
+    font-family: 'xinwei'; 
+    src: url('xinwei.ttf') format('truetype');
+    font-stretch: condensed;
+    font-style: oblique;
+    font-weight: bold;
+}
+
+.hide {
+	display: none;
+}
+
+.name {
+    font-family: 'xinwei';
+
+}
+
+.heart {
+	width: 24px;
+	height: 24px;
+	background: url(../res/official1.png);
+	    background-repeat: no-repeat;
+}
+
+.round {
+	border-radius: 20px;
+}
+#btns button {
+	border-radius: 20px;
+	margin-right: 10px;
+}
+#list-show img {
+	width: 100%;
+}
+#nav-tabContent .tab-pane {
+	padding: 10px;
+}
+#cover {
+	text-align: center;
+}
+#cover img {
+	height: 200px;
+}
