@@ -1,6 +1,6 @@
 var editor;
 var _code;
-
+var _cache = false;
 $(function() {
 	var option = {
         theme: "ace/theme/monokai",
@@ -16,12 +16,10 @@ $(function() {
 	option.theme = 'ace/theme/tomorrow_night';
 	option.readOnly = false;
     editor = ace.edit("editor", option);
-    editor.setValue(g_config.editor);
     editor.on("change", (e) => {
     	g_config.editor = editor.getValue();
     	local_saveJson('config', g_config);
     });
-
     loadData();
     $('body').on('click', '[data-action]', function(event) {
     	let type = $(this).attr('data-action');
@@ -32,13 +30,24 @@ $(function() {
     			var res = code;
     			for(let n in g_data.note.list){
     				if(code.indexOf(n) != -1 && code.indexOf(n+'</span>') == -1){
-    					res = res.replace(n, '<span  data-bs-toggle="tooltip" class="badge bg-'+getArrayRandom(["primary", "secondary", "success", "warning", "info"])+'" data-bs-placement="top" title="'+g_data.note.list[n].desc+'">'+n+'</span>')
+    					res = res.replace(n, '<span data-bs-toggle="tooltip" class="badge bg-'+getArrayRandom(["primary", "secondary", "success", "warning", "info"])+'" data-bs-placement="top" title="'+g_data.note.list[n].desc+'">'+n+'</span>')
     				}
     			}
+
+
     			$('#fullDesc').html(res);
+
+    			// 移除被套中的标记
+    			for(let d of $('#fullDesc span[data-bs-toggle="tooltip"]')){
+    				if(d.childElementCount){
+    					$(d).html(d.innerText);
+    				}
+    			}
+
     			$('#model_fullDesc .modal-title').html($('#skill .list-group-item.active').html());
     			$('#model_fullDesc').modal('show');
    				$("[data-bs-toggle]").tooltip();
+
     			break;
 
     		case 'hero':
@@ -47,6 +56,57 @@ $(function() {
 
     		case 'code':
     			loadSkill(g_config.pack, $(this).attr('data-value'));
+    			break;
+
+    		case 'format':
+    			editor.setValue(doJsBeautify(editor.getValue()), 1);
+    			break;
+
+    		case 'copy':
+    			editor.selectAll()
+				document.execCommand("copy");
+				editor.clearSelection();
+				break;
+
+    		case 'undo':
+    			editor.undo();
+    			break;
+
+    		case 'redo':
+    			editor.redo();
+    			break;
+
+    		case 'copy':
+    			
+    			break;
+
+    		case 'favorite':
+    			toggleButton($(this), $('[data-action="unfavorite"]'))
+    			setFavorite( g_config.pack, g_config.type, g_config.value, true);
+    			break;
+
+    		case 'unfavorite':
+    			toggleButton($(this), $('[data-action="favorite"]'))
+    			setFavorite( g_config.pack, g_config.type, g_config.value, false);
+    			break;
+
+    		case 'save':
+    			if(g_config.note != ''){
+    				g_user.note[g_config.note] = {
+	    				desc: $('#note-desc').val(),
+	    				text: $('#note-text').val(),
+	    				tag: $('#note-tag').val(),
+	    			}
+					local_saveJson('user', g_user);
+					$('[data-action="default"]').removeClass('disabled').removeClass('btn-outline-secondary').addClass('btn-outline-info');
+    			}
+    			break;
+
+    		case 'default':
+    			$(this).addClass('disabled').addClass('btn-outline-secondary').removeClass('btn-outline-info');
+    			delete g_user.note[g_config.note];
+				local_saveJson('user', g_user);
+				getTip(g_config.note);
     			break;
 
     		default:
@@ -67,10 +127,48 @@ $(function() {
     		g_cache.selected.editor = text;
     		getTip(text);
     	}
-    }, 500);
+    }, 250);
 
    $("[data-bs-toggle]").tooltip();
 });
+
+function toggleButton(btn1, btn2){
+	btn1.addClass('hide');
+    btn2.removeClass('hide');
+}
+
+function isFavorite(pack, type, value){
+	return g_config.favorite !== undefined && g_config.favorite[pack] !== undefined ? g_config.favorite[pack][type].indexOf(value) != -1 : false;
+}
+
+
+function setFavorite(pack, type, value, b_favorite = true){
+	if(g_config.favorite == undefined){
+		g_config.favorite = {}
+	}
+	if(g_config.favorite[pack] == undefined){
+		g_config.favorite[pack] = {
+			hero: [],
+			card: []
+		}
+	}
+	var b_changed = false;
+	let i_index = g_config.favorite[pack][type].indexOf(value);
+	if(b_favorite){
+		if(i_index == -1){
+			g_config.favorite[pack][type].push(value);
+			b_changed = true;
+		}
+	}else{
+		if(i_index != -1){
+			g_config.favorite[pack][type].splice(i_index, 1);
+			b_changed = true;
+		}
+	}
+	if(b_changed){
+		local_saveJson('config', g_config);
+	}
+}
 
 
 function getArrayRandom(arr){
@@ -78,16 +176,26 @@ function getArrayRandom(arr){
 }
 
 function getTip(text){
+	var v = {
+		desc: '',
+		text: '',
+		tag: ''
+	};
+	if(g_user.note[text] != undefined){
+		v = g_user.note[text];
+		$('[data-action="default"]').removeClass('disabled').removeClass('btn-outline-secondary').addClass('btn-outline-info');
+	}else
 	if(g_data.note.list[text] != undefined){
-		let v = g_data.note.list[text];
-		$('#note-desc').val(v.desc);
-		$('#note-text').val(v.text);
-		$('#note-tag').val(v.tag);
+		v = g_data.note.list[text];
 	}
+	$('#note-desc').val(v.desc);
+	$('#note-text').val(v.text);
+	$('#note-tag').val(v.tag);
+	g_config.note = text;
 }
 
 function loadData(){
-	if(g_data.hero.length){
+	if(!_cache && g_data.hero.length){
 		initHero();
 	}else{
 		$.getJSON('./res/hero.json', function(json, textStatus) {
@@ -96,12 +204,21 @@ function loadData(){
 			initHero();
 		});
 	}
-	if(g_data.note == undefined || !g_data.note.length){
+	if(!_cache && g_data.note == undefined || !g_data.note.length){
 		$.getJSON('./res/note.json', function(json, textStatus) {
 			g_data.note = json;
 			local_saveJson('data', g_data);
 		});
 	}
+}
+
+function doJsBeautify(text) {
+	if(!text) text = _code.getValue();
+    var e = text.replace(/^\s+/, "");
+    if (e){
+  		return js_beautify(e, 2, " ");
+    }
+    return text;
 }
 
 function showUI(ui){
@@ -115,17 +232,29 @@ function showUI(ui){
 }
 function loadSkill(pack, skill){
 	if( g_data.hero[pack] != undefined && g_data.hero[pack].skill[skill] != undefined){
+		$('body').scrollTop(0);
 		$('audio').attr('src', getRes('audio/skill', skill))[0].play();
-		_code.setValue('skill: '+JSON.stringify(g_data.hero[pack].skill[skill].script, null, 2), 1);
+		_code.setValue(doJsBeautify('skill: '+g_data.hero[pack].skill[skill].script.replaceAll('\n\t', '').replaceAll('\t', '').replaceAll('\\"', '"'), 1));
+    	
+    	//editor.setValue(g_config.editor);
 	}
 }
 function loadHero(pack, hero){
 	if( g_data.hero[pack] != undefined && g_data.hero[pack].hero[hero] != undefined){
 
-		var obj = {
-			pack: pack,
-			hero: hero,
+		g_config.pack = pack;
+		g_config.type = 'hero';
+		g_config.value = hero;
+
+		let b_isFavorited = isFavorite( pack, 'hero', hero);
+		let btn1 = $('[data-action="favorite"]');
+		let btn2 = $('[data-action="unfavorite"]');
+		if(b_isFavorited){
+			toggleButton(btn1, btn2);
+		}else{
+			toggleButton(btn2, btn1);
 		}
+
 		let v = g_data.hero[pack].hero[hero];
 		$(".breadcrumb").html(`
 			    <li class="breadcrumb-item"><a href="javascript: showUI('ui_list')">Home</a></li>
@@ -134,7 +263,8 @@ function loadHero(pack, hero){
 			  </ol>
 		`);
 
-		$('#cover img').attr('src', getRes('image/character', hero));
+
+		$('#cover img').attr('src', 'res/loading.gif').attr('data-src', getRes('image/character', hero)).lazyload();
 
 		var h1 = '';
 		var h2 = '';
@@ -145,7 +275,9 @@ function loadHero(pack, hero){
 		}
 		$('#list-tab').html(h1);
 		$('#nav-tabContent').html(h2);
-
+		if(v.attr[3].length){
+			$('[data-action="code"]')[0].click()
+		}
 		showUI('ui_hero');
 	}
 }
@@ -175,7 +307,7 @@ function loadPack(pack, _sl = ''){
 			if(_sl != '' && v[1] != _sl) continue; 
 			obj.card += `
 				<div data-pack="`+pack+`" data-action="hero" data-value="`+name+`" class="col-3 mb-2" style="position: relative;">
-					<img class="round" src="`+getRes('image/character', name)+`"></img>
+					<img class="round lazyload" src="./res/loading.gif" data-src="`+getRes('image/character', name)+`"></img>
 				</div>
 			`;
 
@@ -207,6 +339,7 @@ function loadPack(pack, _sl = ''){
 			  <label class="form-check-label" for="selecter_all">全</label>
 			</div>` + obj.sl_html);
 	}
+	$('.lazyload').lazyload({effect: "fadeIn"});
 }
 
 function selectSL(){
@@ -248,6 +381,6 @@ function initHero(){
 	.on('change', function(event) {
 		loadPack($(this).val());
 	});
-	// g_config.pack = "sp";
-	// loadHero("sp", "huaxin");
+	g_config.pack = "sp";
+	loadHero("sp", "huaxin");
 }

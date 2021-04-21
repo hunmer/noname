@@ -1,13 +1,13 @@
 .grid-container {
   display: grid;
-  grid-template-columns: 1fr 0.6fr 1.4fr 1.2fr;
+  grid-template-columns: 1.5fr 0.5fr 1fr 2.6fr 0.3fr 0.1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr;
   gap: 0px 0px;
   grid-template-areas:
-    "note note editor1 editor1"
-    "note note editor1 editor1"
-    "note note editor2 editor2"
-    "note note editor2 editor2";
+    "note editor1 editor1 editor1 sidebar1 ."
+    "note editor1 editor1 editor1 sidebar1 ."
+    "note editor2 editor2 editor2 sidebar2 ."
+    "note editor2 editor2 editor2 sidebar2 .";
 }
 
 .note { grid-area: note; }
@@ -16,7 +16,15 @@
 
 .editor2 { grid-area: editor2; }
 
+.sidebar1 { grid-area: sidebar1; }
 
+.sidebar2 { grid-area: sidebar2; }
+
+
+.sidebar button {
+	margin-top: 10px;
+	width: 80%;
+}
 #editor {
 	height: 200px;
 	font-size: 15px;
@@ -54,10 +62,12 @@
 .round {
 	border-radius: 20px;
 }
-#btns button {
+
+.btns button {
 	border-radius: 20px;
 	margin-right: 10px;
 }
+
 #list-show img {
 	width: 100%;
 }
@@ -68,5 +78,6 @@
 	text-align: center;
 }
 #cover img {
+	width: 150px;
 	height: 200px;
 }
