@@ -13,12 +13,81 @@
 <link rel="shortcut icon" href="favicon.ico">
 <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="css/index.css">
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+   <div class="accordion accordion-flush" id="accordionFlushExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingOne">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+      	收藏
+      </button>
+    </h2>
+    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">
+      	
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingTwo">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+        功能
+      </button>
+    </h2>
+    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">
+      	<button type="button" data-action="openSeach" class="btn btn-outline-primary btn-lg w-100">搜索</button>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingThree">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+        其他
+      </button>
+    </h2>
+    <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body"></div>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+
+
 <body class="container pt-3 bg-dark text-light">
 
-	<!-- Modal -->
-	<div class="modal fade" id="model_fullDesc" style="width: 80%" tabindex="-1" aria-hidden="true">
+	<div id="loading" class="spinner-grow text-primary mx-auto text-center" style="display: block;" role="status">
+	  <span class="visually-hidden">Loading...</span>
+	</div>
+
+	<!-- 自定义modal -->
+	
+	<div class="modal fade" id="model_custom" style="width: 80%;z-index: 9999999;" tabindex="-1" aria-hidden="true">
 	  <div class="modal-dialog">
 	    <div class="modal-content"  style="width: fit-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title text-dark"></h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body bg-dark">
+	      </div>
+	     <!--  <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary">Save changes</button>
+	      </div> -->
+	    </div>
+	  </div>
+	</div>
+
+	<div class="modal fade" id="model_fullDesc" tabindex="-1" aria-hidden="true">
+	  <div class="modal-dialog modal-fullscreen">
+	    <div class="modal-content" >
 	      <div class="modal-header">
 	        <h5 class="modal-title text-dark"></h5>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -35,7 +104,89 @@
 	  </div>
 	</div>
 
-	<div id="ui_list" class="ui row" id="home">
+	<div class="modal fade" id="model_search" tabindex="-1" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title text-dark">搜索</h5>
+	       	<button title="重置" data-action="resetSearch" type="button" style="position: absolute;
+    right: 50px;" class="btn btn-outline-primary btn-lg">
+	       		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+  <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+</svg>
+	       	</button>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body bg-dark">
+	      	<div class="input-group mb-3 w-75">
+				  <div class="input-group-text">
+				    <input class="form-check-input mt-0" type="checkbox" value="hero" aria-label="Checkbox for following text input">
+				    <span>&nbsp;&nbsp;武将</span>
+				  </div>
+				  <input oninput="onSearchInputChange(this)" type="text" class="form-control" aria-label="Text input with checkbox">
+				  <button data-action="list_hero" type="button" class="btn btn-outline-info btn-lg round" style="margin-left: 10px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-heading" viewBox="0 0 16 16">
+  <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+  <path d="M3 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0-5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-1z"/>
+</svg></button>
+			</div>
+			<div class="input-group mb-3 w-75">
+				  <div class="input-group-text">
+				    <input class="form-check-input mt-0" type="checkbox" value="skill" aria-label="Checkbox for following text input">
+				    <span>&nbsp;&nbsp;技能</span>
+				  </div>
+				  <input oninput="onSearchInputChange(this)" type="text" class="form-control" aria-label="Text input with checkbox">
+				  <button data-action="list_hero" type="button" class="btn btn-outline-info btn-lg round" style="margin-left: 10px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-heading" viewBox="0 0 16 16">
+  <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+  <path d="M3 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0-5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-1z"/>
+</svg></button>
+			</div>
+			<div class="input-group mb-3">
+				  <div class="input-group-text">
+				    <input class="form-check-input mt-0" type="checkbox" value="desc" aria-label="Checkbox for following text input">
+				    <span>&nbsp;&nbsp;描述</span>
+				  </div>
+				  <input oninput="onSearchInputChange(this)" type="text" class="form-control" aria-label="Text input with checkbox">
+				  <button data-action="list_hero" type="button" class="btn btn-outline-info btn-lg round" style="margin-left: 10px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-heading" viewBox="0 0 16 16">
+  <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+  <path d="M3 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0-5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-1z"/>
+</svg></button>
+			</div>
+			<div class="input-group mb-3">
+				  <div class="input-group-text">
+				    <input class="form-check-input mt-0" type="checkbox" value="code" aria-label="Checkbox for following text input">
+				    <span>&nbsp;&nbsp;代码</span>
+				  </div>
+				  <input oninput="onSearchInputChange(this)" type="text" class="form-control" aria-label="Text input with checkbox">
+				  <button data-action="list_hero" type="button" class="btn btn-outline-info btn-lg round" style="margin-left: 10px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-heading" viewBox="0 0 16 16">
+  <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+  <path d="M3 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0-5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-1z"/>
+</svg></button>
+			</div>
+			  <button data-action="search" type="button" class="btn btn-outline-success btn-lg round text-center w-100"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+</svg></button>
+		<div id="search_result" class="list-group mt-3">
+
+</div>
+
+	      </div>
+
+	     <!--  <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary">Save changes</button>
+	      </div> -->
+	    </div>
+	  </div>
+	</div>
+
+	<div id="ui_list" class="ui row hide">
+		<div class="col-1" style="padding-top: 3px;">
+			<svg data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" data-action="menu" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+</svg>
+		</div>
+
 		<div id="selecter" class="col-8" onchange="selectSL()">
 			
 		</div>
@@ -63,12 +214,12 @@
 
 
 		<div id="" class="col-1" style="padding-top: 3px;">
-			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+			<svg data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" data-action="menu" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
   <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
 </svg>
 		</div>
 
-		<div id="" class="col-10">
+		<div id="" class="col-9">
 			<nav aria-label="breadcrumb">
 			  <ol class="breadcrumb">
 			    <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -78,6 +229,11 @@
 			</nav>
 		</div>
 
+		<div id="" class="col-1 text-center" style="padding-top: 3px;">
+			<svg data-action="openSeach" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+</svg>
+		</div>
 		<div id="" class="col-1" style="padding-top: 3px;">
 			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
   <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
@@ -90,13 +246,13 @@
 
 			<div id="skill" class="col text-white text-center">
 				<div class="row">
-				  <div class="col-4">
+				  <div class="col-2">
 				    <div class="list-group round " id="list-tab" role="tablist">
 				    <!--   <a class="list-group-item list-group-item-action active" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a> -->
 				    
 				    </div>
 				  </div>
-				  <div class="col-8 round border border-3 border-info">
+				  <div class="col round border border-3 border-info">
 				    <div class="tab-content" id="nav-tabContent">
 				      <!-- <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">...</div> -->
 				
@@ -169,10 +325,17 @@
 			 </div>
 			<div class="grid-container pt-2">
 			  <div class="note">
-			  	<div class="mb-1" style="width: 95%;">
+			  	<div class="mb-1" >
+			  	 <div class="list-group" id="note_more" style="height: 100px;overflow-y: auto;">
+				</div>
+				</div>
+
+			  	<div class="mb-1" style="width: 75%;">
 				  <label for="note-desc" class="form-label">说明</label>
 				  <textarea class="form-control round border border-3 border-secondary" id="note-desc" rows="3"></textarea>
+
 				</div>
+
 			  	<div class="mb-2" style="width: 95%;">
 				  <label for="note-text" class="form-label">注释</label>
 				  <textarea class="form-control round border border-3 border-secondary" id="note-text" rows="6"></textarea>
@@ -233,5 +396,6 @@
 <script type="text/javascript" src="js/lazyload.min.js"></script>
 <script type="text/javascript" src="js/popper.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" src="js/ace.js"></script>
 <script type="text/javascript" src="js/main.js"></script>

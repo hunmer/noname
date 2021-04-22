@@ -20,6 +20,7 @@ var g_user = local_readJson('user', {
 
 var g_cache = {
     skillAduio: false,
+    choosedSkill: undefined,
     selected: {
         code: '',
         editor: ''
@@ -40,6 +41,19 @@ function getGETArray() {
         }
     }
     return a_result;
+}
+
+function getTextbyStartAndEnd(s_text, s_start, s_end, i_start = 0, b_save = false){
+    i_start = s_text.indexOf(s_start, i_start);
+    if(i_start === -1) return '';
+    i_start += s_start.length;
+    i_end = s_text.indexOf(s_end, i_start);
+    if(i_end === -1) return '';
+    if(b_save){
+        return s_start+ s_text.substr(i_start, i_end-i_start) +s_end;
+    }else{
+        return s_text.substr(i_start, i_end-i_start);
+    }
 }
 
 function local_saveJson(key, data) {
