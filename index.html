@@ -121,8 +121,10 @@
 	      <div class="modal-body bg-dark">
 	      	<div class="input-group mb-3 w-75">
 				  <div class="input-group-text">
-				    <input class="form-check-input mt-0" type="checkbox" value="hero" aria-label="Checkbox for following text input">
-				    <span>&nbsp;&nbsp;武将</span>
+				    <input id="search_checkbox_hero" class="form-check-input mt-0" type="checkbox" value="hero" aria-label="Checkbox for following text input">
+				     <label class="form-check-label" for="search_checkbox_hero">
+				     	&nbsp;&nbsp;武将
+				  </label>
 				  </div>
 				  <input oninput="onSearchInputChange(this)" type="text" class="form-control" aria-label="Text input with checkbox">
 				  <button data-action="list_hero" type="button" class="btn btn-outline-info btn-lg round" style="margin-left: 10px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-heading" viewBox="0 0 16 16">
@@ -132,8 +134,10 @@
 			</div>
 			<div class="input-group mb-3 w-75">
 				  <div class="input-group-text">
-				    <input class="form-check-input mt-0" type="checkbox" value="skill" aria-label="Checkbox for following text input">
-				    <span>&nbsp;&nbsp;技能</span>
+				    <input id="search_checkbox_skill" class="form-check-input mt-0" type="checkbox" value="skill" aria-label="Checkbox for following text input">
+				    <label class="form-check-label" for="search_checkbox_skill">
+				    &nbsp;&nbsp;技能
+				  </label>
 				  </div>
 				  <input oninput="onSearchInputChange(this)" type="text" class="form-control" aria-label="Text input with checkbox">
 				  <button data-action="list_hero" type="button" class="btn btn-outline-info btn-lg round" style="margin-left: 10px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-heading" viewBox="0 0 16 16">
@@ -143,8 +147,10 @@
 			</div>
 			<div class="input-group mb-3">
 				  <div class="input-group-text">
-				    <input class="form-check-input mt-0" type="checkbox" value="desc" aria-label="Checkbox for following text input">
-				    <span>&nbsp;&nbsp;描述</span>
+				    <input id="search_checkbox_desc" class="form-check-input mt-0" type="checkbox" value="desc" aria-label="Checkbox for following text input">
+				    <label class="form-check-label" for="search_checkbox_desc">
+				    &nbsp;&nbsp;描述
+				  </label>
 				  </div>
 				  <input oninput="onSearchInputChange(this)" type="text" class="form-control" aria-label="Text input with checkbox">
 				  <button data-action="list_hero" type="button" class="btn btn-outline-info btn-lg round" style="margin-left: 10px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-heading" viewBox="0 0 16 16">
@@ -154,8 +160,10 @@
 			</div>
 			<div class="input-group mb-3">
 				  <div class="input-group-text">
-				    <input class="form-check-input mt-0" type="checkbox" value="code" aria-label="Checkbox for following text input">
-				    <span>&nbsp;&nbsp;代码</span>
+				    <input id="search_checkbox_code" class="form-check-input mt-0" type="checkbox" value="code" aria-label="Checkbox for following text input">
+				    <label class="form-check-label" for="search_checkbox_code">
+				    &nbsp;&nbsp;代码
+				  </label>
 				  </div>
 				  <input oninput="onSearchInputChange(this)" type="text" class="form-control" aria-label="Text input with checkbox">
 				  <button data-action="list_hero" type="button" class="btn btn-outline-info btn-lg round" style="margin-left: 10px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-heading" viewBox="0 0 16 16">
@@ -326,8 +334,16 @@
 			<div class="grid-container pt-2">
 			  <div class="note">
 			  	<div class="mb-1" >
-			  	 <div class="list-group" id="note_more" style="height: 100px;overflow-y: auto;">
+			  	 <div class="list-group" id="note_more" style="height: 100px;overflow-y: auto;display: none;">
 				</div>
+				</div>
+
+				<div class="mb-1" style="width: 95%">
+				  <textarea class="form-control round border border-3 border-secondary" id="note-key" rows="1"></textarea>
+				  <div class="form-check form-switch">
+					  <input class="form-check-input" type="checkbox" id="switch-NoteTimer" onchange="switchNoteTimer(this.checked);">
+					  <label class="form-check-label" for="switch-NoteTime">监听</label>
+					</div>
 				</div>
 
 			  	<div class="mb-1" style="width: 75%;">

@@ -27,26 +27,43 @@ $(function() {
     	doAction($(this).attr('data-action'), $(this))
     });
 
-     setInterval(() => {
-    	var text;
-    	text = _code.getSelectedText();
-    	if(text != g_cache.selected.code){
-    		g_cache.selected.code = text;
-    		getTip(text);
-    	}
-    	text = editor.getSelectedText();
-    	if(text != g_cache.selected.editor){
-    		g_cache.selected.editor = text;
-    		getTip(text);
-    	}
-    }, 250);
-
+    switchNoteTimer();
    $("[data-bs-toggle]").tooltip();
 
    $('#model_search')[0].addEventListener('shown.bs.modal', function (event) {
 		applySearchInput();
 	});
 });
+
+function switchNoteTimer(b_enable){
+	if(b_enable == undefined){
+		b_enable = g_config.switchNoteTimer;
+	}else{
+		g_config.switchNoteTimer = b_enable;
+		local_saveJson('config', g_config);
+	}
+	$('#switch-NoteTimer').prop('checked', b_enable);
+	if(g_cache.timer){
+		clearInterval(g_cache.timer);
+		g_cache.timer = 0;
+	}
+	if(b_enable){
+		g_cache.timer = setInterval(() => {
+	    	var text;
+	    	text = _code.getSelectedText();
+			$('#note-key').val(text);
+	    	if(text != g_cache.selected.code){
+	    		g_cache.selected.code = text;
+	    		getTip(text);
+	    	}
+	    	text = editor.getSelectedText();
+	    	if(text != g_cache.selected.editor){
+	    		g_cache.selected.editor = text;
+	    		getTip(text);
+	    	}
+	    }, 250);
+	}
+}
 
 function applySearchInput(){
 	var v;
@@ -70,9 +87,9 @@ function doAction(type, dom){
     			let code = _code.getValue();
     			if(code == '') return;
     			var res = code;
-    			for(var n in g_data.note.list){
+    			for(var n in g_noteList[g_config.noteName]){
     				if(code.indexOf(n) != -1 && code.indexOf(n+'</span>') == -1){
-    					res = res.replace(n, '<span data-bs-toggle="tooltip" class="badge bg-'+getArrayRandom(["primary", "secondary", "success", "warning", "info"])+'" data-bs-placement="top" title="'+g_data.note.list[n].desc+'">'+n+'</span>')
+    					res = res.replace(n, '<span data-bs-toggle="tooltip" class="badge bg-'+getArrayRandom(["primary", "secondary", "success", "warning", "info"])+'" data-bs-placement="top" title="'+g_noteList[g_config.noteName][n].desc+'">'+n+'</span>')
     				}
     			}
     			for(var n in g_user.note){
@@ -301,7 +318,7 @@ function doAction(type, dom){
     			setFavorite( g_config.pack, g_config.type, g_config.value, false);
     			break;
 
-    		case 'save':
+    		case 'save': // TODO
     			if(g_config.note != ''){
     				g_user.note[g_config.note] = {
 	    				desc: $('#note-desc').val(),
@@ -381,8 +398,8 @@ function getTip(text){
 			v = g_user.note[text];
 			$('[data-action="default"]').removeClass('disabled').removeClass('btn-outline-secondary').addClass('btn-outline-info');
 		}else
-		if(g_data.note.list[text] != undefined){
-			v = g_data.note.list[text];
+		if(g_noteList[g_config.noteName][text] != undefined){
+			v = g_noteList[g_config.noteName][text];
 		}
 		$('#note-desc').val(v.desc);
 		$('#note-text').val(v.text);
@@ -390,10 +407,10 @@ function getTip(text){
 		g_config.note = text;
 
 		var arr = [];
-		for(var n in g_data.note.list){
+		for(var n in g_noteList[g_config.noteName]){
 			if(n.indexOf(text) != -1 && n != text){
 				arr.push(n);
-				//arr.push(g_data.note.list[n]);
+				//arr.push(g_noteList[g_config.noteName][n]);
 			}
 		}
 		for(var n in g_user.note){
@@ -420,10 +437,10 @@ function loadData(){
 			initHero();
 		});
 	}
-	if(!_cache && g_data.note == undefined || !g_data.note.length){
+	if(!_cache && g_noteList == undefined || g_noteList.default == undefined){
 		$.getJSON('./res/note.json', function(json, textStatus) {
-			g_data.note = json;
-			local_saveJson('data', g_data);
+			g_noteList.default = json;
+			local_saveJson('noteList', g_noteList);
 		});
 	}
 }
@@ -458,7 +475,7 @@ function loadSkill(pack, skill){
 			skill = audioName;
 		} 
 		$('audio').attr('src', getRes('audio/skill', skill))[0].play();
-		_code.setValue(doJsBeautify('skill = '+script, 1));
+		_code.setValue(doJsBeautify('skill = '+script, 1), -1);
     	
     	//editor.setValue(g_config.editor);
 	}
@@ -627,6 +644,7 @@ function initHero(){
 function onSearchInputChange(dom){
 	$(dom).parent().find('input[type=checkbox]').prop('checked', dom.value ? true : false);
 }
+
 
 function onSearchInputChange1(dom){
 	for(let d of $('#search_result .list-group-item')){

@@ -7,12 +7,24 @@ var g_config = local_readJson('config', {
     value: '', // ID
     editor: '',
     favorite: {}, // 收藏的列表
+    noteName: 'default',
 });
+if(!g_config.noteName) g_config.noteName = 'default';
 
 var g_data = local_readJson('data', {
     hero: {},
     card: {}
 });
+
+var g_noteList = local_readJson('noteList', {
+    default: {},
+});
+if(g_data.note != undefined){
+    g_noteList.default = g_data.note.list;
+    local_saveJson('noteList', g_noteList);
+    delete g_data.note;
+    local_saveJson('data', g_data);
+}
 
 var g_user = local_readJson('user', {
     note: {},
